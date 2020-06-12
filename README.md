@@ -6,7 +6,7 @@ The repository implements the Optimal Transport Kernel (OTK) described in the fo
 [An Optimal Transport Kernel for Feature Aggregation and its Relationship to Attention][1]. preprint arXiv. 2020.
 <br/>*Equal contribution
 
-## Short description about the module
+## A short description about the module
 
 The principal module is implemented in `otk/layers.py` as `OTKernel`. It takes a sequence or image tensor as input, and performs an adaptive pooling (attention + pooling) based on optimal transport. Here is an example
 ```python
@@ -35,7 +35,7 @@ pytorch=1.4.0
 pandas
 ```
 Then run
-```
+```bash
 export PYTHONPATH=$PWD:$PYTHONPATH
 ```
 
