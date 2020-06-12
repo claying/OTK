@@ -2,8 +2,9 @@
 
 The repository implements the Optimal Transport Kernel (OTK) described in the following paper
 
->Grégoire Mialon, Dexiong Chen, Alexandre d'Aspremont, Julien Mairal.
-[An Optimal Transport Kernel for Feature Aggregation and its Relationship to Attention][1]. preprint ArXiv. 2020.
+>Grégoire Mialon*, Dexiong Chen*, Alexandre d'Aspremont, Julien Mairal.
+[An Optimal Transport Kernel for Feature Aggregation and its Relationship to Attention][1]. preprint arXiv. 2020.
+<br/>*Equal contribution
 
 ## Short description about the module
 
@@ -17,7 +18,7 @@ n_dim = 128
 otk_layer = OTKernel(in_dim=n_dim, out_size=10, heads=1)
 # create 2 batches of sequences of L=100 and dim=128
 input = torch.rand(2, 100, n_dim)
-# each output sequence has L=10 and dim=300
+# each output sequence has L=10 and dim=128
 output = otk_layer(input) # 2 x 10 x 128
 ```
 The implemented layer can be trained in either unsupervised (with K-means) or supervised (like the multi-head self-attention module) fashions. See more details in our [paper][1].
