@@ -25,16 +25,13 @@ test_list = 'SCOP206'
 
 def load_args():
     parser = argparse.ArgumentParser(
-        description="sup OT kernel for SCOP 175/206",
+        description="unsup OT kernel for SCOP 175/206",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
         '--seed', type=int, default=1, help='random seed')
     parser.add_argument(
         '--batch-size', type=int, default=128,
         help='input batch size for training')
-    parser.add_argument(
-        '--epochs', type=int, default=100, metavar='N',
-        help='number of epochs to train (default: 100)')
     parser.add_argument(
         "--n-filters", default=[128], nargs='+', type=int,
         help="number of filters for each layer")
@@ -46,7 +43,7 @@ def load_args():
         help="subsampling for each layer")
     parser.add_argument(
         "--kernel-params", default=[0.6], nargs='+', type=float,
-        help="sigma for each layer")
+        help="sigma for Gaussian kernel at each layer")
     parser.add_argument(
         "--sampling-patches", default=300000, type=int,
         help="number of sampled patches")

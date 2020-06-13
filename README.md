@@ -83,7 +83,7 @@ To reproduce the results (auROC=0.936, auPRC=0.360) in Table 3, run the followin
     Download our [pretrained model][4] to `./logs_deepsea` and then run
     ```bash
     cd experiments
-    python eval_deepsea.py --sigma 1.0 --heads 1 --out-size 64 --hidden-layer --position-encoding gaussian --weight-decay 1e-06 --position-sigma 0.1 --outdir ../logs_deepsea --max-iter 30 --filter-size 16 --hidden-size 1536
+    python eval_deepsea.py --eps 1.0 --heads 1 --out-size 64 --hidden-layer --position-encoding gaussian --weight-decay 1e-06 --position-sigma 0.1 --outdir ../logs_deepsea --max-iter 30 --filter-size 16 --hidden-size 1536
     ```
 
 * **Training and Evaluating a new model**
@@ -91,11 +91,11 @@ To reproduce the results (auROC=0.936, auPRC=0.360) in Table 3, run the followin
     First train a model with the following commands
     ```bash
     cd experiments
-    python train_deepsea.py --sigma 1.0 --heads 1 --out-size 64 --hidden-layer --position-encoding gaussian --weight-decay 1e-06 --position-sigma 0.1 --outdir ../logs_deepsea --max-iter 30 --filter-size 16 --hidden-size 1536
+    python train_deepsea.py --eps 1.0 --heads 1 --out-size 64 --hidden-layer --position-encoding gaussian --weight-decay 1e-06 --position-sigma 0.1 --outdir ../logs_deepsea --max-iter 30 --filter-size 16 --hidden-size 1536
     ```
     Once the model is trained, run
     ```bash
-    python eval_deepsea.py --sigma 1.0 --heads 1 --out-size 64 --hidden-layer --position-encoding gaussian --weight-decay 1e-06 --position-sigma 0.1 --outdir ../logs_deepsea --max-iter 30 --filter-size 16 --hidden-size 1536
+    python eval_deepsea.py --eps 1.0 --heads 1 --out-size 64 --hidden-layer --position-encoding gaussian --weight-decay 1e-06 --position-sigma 0.1 --outdir ../logs_deepsea --max-iter 30 --filter-size 16 --hidden-size 1536
     ```
 
 

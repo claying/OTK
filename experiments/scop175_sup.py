@@ -34,7 +34,7 @@ def load_args():
         help='input batch size for training')
     parser.add_argument(
         '--epochs', type=int, default=100, metavar='N',
-        help='number of epochs to train (default: 100)')
+        help='number of epochs to train')
     parser.add_argument(
         "--n-filters", default=[128], nargs='+', type=int,
         help="number of filters for each layer")
@@ -46,7 +46,7 @@ def load_args():
         help="subsampling for each layer")
     parser.add_argument(
         "--kernel-params", default=[0.5], nargs='+', type=float,
-        help="sigma for each layer")
+        help="sigma for Gaussian kernel at each layer")
     parser.add_argument(
         "--sampling-patches", default=300000, type=int,
         help="number of sampled patches")
@@ -64,7 +64,7 @@ def load_args():
     parser.add_argument(
         "--outdir", default="", type=str, help="output path")
     parser.add_argument("--lr", type=float, default=0.01,
-        help='learning rate')
+        help='initial learning rate')
     parser.add_argument("--alternating", action='store_true',
         help='alternating training')
     args = parser.parse_args()

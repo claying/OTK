@@ -32,34 +32,32 @@ def load_args():
         '--batch-size', type=int, default=128, metavar='M',
         help='input batch size for training')
     parser.add_argument(
-        '--epochs', type=int, default=100, metavar='N',
-        help='number of epochs to train')
-    parser.add_argument(
-        "--hidden-size", default=1024, type=int,
+        "--hidden-size", default=1536, type=int,
         help="hidden size for conv1d and attn layers")
     parser.add_argument(
         "--filter-size", default=16, type=int,
         help="filter size for embedding conv1d")
     parser.add_argument(
-        "--weight-decay", type=float, default=5e-07,
+        "--weight-decay", type=float, default=1e-06,
         help="regularization parameter for sup CKN")
     parser.add_argument(
         "--eps", default=1.0, type=float, help="eps for OT kernel")
     parser.add_argument(
         "--attn-layers", default=1, type=int, help="number of OT attn layers")
     parser.add_argument(
-        '--heads', type=int, default=5, help='number of heads for attention layer')
+        '--heads', type=int, default=1, help='number of heads for attention layer')
     parser.add_argument(
-        '--out-size', type=int, default=10, help='number of supports for attention layer')
+        '--out-size', type=int, default=64, help='number of supports for attention layer')
     parser.add_argument(
-        '--max-iter', type=int, default=10, help='max iteration for ot kernel')
+        '--max-iter', type=int, default=30, help='max iteration for ot kernel')
     parser.add_argument(
         '--hidden-layer', action='store_true', help='use one hidden-layer in classfier')
     parser.add_argument(
-        '--position-encoding', default=None, choices=['gaussian', 'hard'])
+        '--position-encoding', default=None, choices=['gaussian', 'hard'],
+        help='position encoding type')
     parser.add_argument(
-        '--position-sigma', default=0.25, type=float, help='sigma for position encoding')
-    parser.add_argument("--lr", type=float, default=0.001, help='learning rate')
+        '--position-sigma', default=0.1, type=float, help='sigma for position encoding')
+    parser.add_argument("--lr", type=float, default=0.001, help='initial learning rate')
     parser.add_argument("--report-step", type=int, default=1000,
         help="report stat step during training")
     parser.add_argument(
