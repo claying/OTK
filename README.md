@@ -8,20 +8,58 @@ The repository implements the Optimal Transport Kernel (OTK) described in the fo
 
 ## A short description about the module
 
-The principal module is implemented in `otk/layers.py` as `OTKernel`. It takes a sequence or image tensor as input, and performs an adaptive pooling (attention + pooling) based on optimal transport. Here is an example
+The principal module is implemented in `otk/layers.py` as `OTKernel`. It is generally used with a non-linear layer. Combined with the non-linear layer, it takes a sequence or image tensor as input, and performs a non-linear embedding and an adaptive pooling (attention + pooling) based on optimal transport. Specifically, given a sequence x as input, it first computes the optimal transport plan from x to some reference z (left figure). The optimal transport plan, interpreted as the attention score, is then used to obtain a new sequence of the same size as z following a non-linear mapping (right figure). See more details in our [paper][1].
+
+![otk](figs/otk2.png)
+![otk](figs/otk1.png)
+
+OTKernel can be trained in either **unsupervised** (with K-means) or **supervised** (like the multi-head self-attention module in Transformer) fashions. It can be used as a module in neural networks, or alone as a kernel method.
+
+#### Using OTKernel as a module in NNs
+
+Here is an example to use `OTKernel` in a one-layer model
 ```python
 import torch
+from torch import nn
 from otk.layers import OTKernel
 
-n_dim = 128
-# create an OTK layer with single reference and number of supports=10
-otk_layer = OTKernel(in_dim=n_dim, out_size=10, heads=1)
+in_dim = 128
+hidden_size = 64
+# create an OTK model with single reference and 10 supports
+otk_layer = nn.Sequential(
+    nn.Linear(in_dim, hidden_size),
+    nn.ReLU(),
+    OTKernel(in_dim=hidden_size, out_size=10, heads=1)
+)
 # create 2 batches of sequences of L=100 and dim=128
-input = torch.rand(2, 100, n_dim)
-# each output sequence has L=10 and dim=128
-output = otk_layer(input) # 2 x 10 x 128
+input = torch.rand(2, 100, in_dim)
+# each output sequence has L=10 and dim=64
+output = otk_layer(input) # 2 x 10 x 64
 ```
-The implemented layer can be trained in either unsupervised (with K-means) or supervised (like the multi-head self-attention module) fashions. See more details in our [paper][1].
+
+#### Using OTKernel alone as a kernel mapping
+
+When using OTKernel alone, the non-linear mapping is a Gaussian kernel (or a [convolutional kernel][5]). The full model for sequence is implemented in `otk/models.py` as `SeqAttention`. Here is an example
+```python
+import torch
+from otk.models import SeqAttention
+
+in_dim = 128
+hidden_size = 64
+nclass = 10
+# create a classification model based on one CKN and OTK, with filter_size=1 and sigma=0.6 for CKN and with 4 references and 10 supports for OTK
+otk_model = SeqAttention(
+    in_dim, nclass, [hidden_size], [1], [1], [0.6], out_size=10, heads=4
+)
+# create 2 batches of sequences of L=100 and dim=128
+input = torch.rand(2, in_dim, 100)
+# output: 2 x 10
+output = otk_model(input)
+```
+Besides training with back-propagation, the above `otk_model` can be trained without supervision when provided with a `data_loader`.
+```python
+otk_model.unsup_train(data_loader)
+```
 
 ## Installation
 
@@ -103,3 +141,4 @@ To reproduce the results (auROC=0.936, auPRC=0.360) in Table 3, run the followin
 [2]: https://docs.conda.io/en/latest/miniconda.html
 [3]: https://pytorch.org
 [4]: http://pascal.inrialpes.fr/data2/dchen/pretrained/otk_checkpoint.zip
+[5]: https://doi.org/10.1101/217257
