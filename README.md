@@ -56,8 +56,12 @@ input = torch.rand(2, in_dim, 100)
 # output: 2 x 10
 output = otk_model(input)
 ```
-Besides training with back-propagation, the above `otk_model` can be trained without supervision when provided with a `data_loader`.
+Besides training with back-propagation, the above `otk_model` can be trained without supervision when provided with a `data_loader` object created by `torch.utils.data.DataLoader`.
 ```python
+from torch.utils.data import DataLoader
+
+# suppose that we have stored data in dataset
+data_loader = DataLoader(dataset, batch_size=256, shuffle=False)
 otk_model.unsup_train(data_loader)
 ```
 
@@ -67,7 +71,6 @@ We strongly recommend users to use [miniconda][2] to install the following packa
 ```
 python=3.6
 numpy
-scipy
 scikit-learn
 pytorch=1.4.0
 pandas
