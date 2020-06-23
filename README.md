@@ -3,7 +3,7 @@
 The repository implements the Optimal Transport Kernel (OTK) described in the following paper
 
 >Grégoire Mialon*, Dexiong Chen*, Alexandre d'Aspremont, Julien Mairal.
-[An Optimal Transport Kernel for Feature Aggregation and its Relationship to Attention][1]. preprint arXiv. 2020.
+[An Optimal Transport Kernel for Feature Aggregation and its Relationship to Attention][1]. preprint arXiv, 2020.
 <br/>*Equal contribution
 
 ## A short description about the module
@@ -140,7 +140,7 @@ To reproduce the results (auROC=0.936, auPRC=0.360) in Table 3, run the followin
     ```
 
 
-[1]: http://arxiv.org/abs/2006
+[1]: https://arxiv.org/abs/2006.12065
 [2]: https://docs.conda.io/en/latest/miniconda.html
 [3]: https://pytorch.org
 [4]: http://pascal.inrialpes.fr/data2/dchen/pretrained/otk_checkpoint.zip
