@@ -1,7 +1,7 @@
 import os
 import argparse
 
-from ckn.data.loader_scop import load_data, load_masks
+from loaders import load_data, load_masks
 from otk.models import SeqAttention
 from torch.utils.data import DataLoader, TensorDataset
 import torch
@@ -12,7 +12,6 @@ import numpy as np
 import copy
 
 from timeit import default_timer as timer
-from settings import RESULTS_PATH
 
 
 def load_args():
@@ -20,7 +19,7 @@ def load_args():
         description="unsup OT kernel for SST2",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--dataset', choices=['sst-2_bert_mask',
-                                              'cifar_5k_256'],
+                                              'sst-2_proto'],
                         default='sst-2_bert_mask')
     parser.add_argument(
         '--seed', type=int, default=1, help='random seed')
@@ -62,7 +61,7 @@ def load_args():
     parser.add_argument(
         '--baseline', type=str, default=None)
     parser.add_argument(
-        "--outdir", default="", type=str, help="output path")
+        "--outdir", default="results/", type=str, help="output path")
     args = parser.parse_args()
     args.use_cuda = torch.cuda.is_available()
     # check shape
@@ -73,7 +72,7 @@ def load_args():
     args.save_logs = False
     if args.outdir != "":
         args.save_logs = True
-        outdir = args.outdir
+        outdir = args.outdir + args.dataset
         if not os.path.exists(outdir):
             try:
                 os.makedirs(outdir)
@@ -85,13 +84,6 @@ def load_args():
                 os.makedirs(outdir)
             except:
                 pass
-        if args.alternating:
-            outdir = outdir + "/alter"
-            if not os.path.exists(outdir):
-                try:
-                    os.makedirs(outdir)
-                except:
-                    pass
         outdir = outdir+'/ckn_{}_{}_{}_{}'.format(
             args.n_filters, args.len_motifs, args.subsamplings,
             args.kernel_params)
@@ -180,19 +172,21 @@ def main():
         torch.cuda.manual_seed(args.seed)
     np.random.seed(args.seed)
 
-    X_train, y_train, X_val, y_val, _ = load_data(dataset=args.dataset,
-                                                  nb_samples=args.n_samples)
-    mask_train, mask_val, _ = load_masks(args.dataset, args.n_samples)
+    X_train, y_train, X_val, y_val, _ = load_data(dataset=args.dataset)
+    mask_train, mask_val, _ = load_masks(args.dataset)
+
+    X_train *= mask_train
+    X_val *= mask_val
 
     y_train = torch.from_numpy(y_train)
     y_val = torch.from_numpy(y_val)
 
     nb_train = int(0.8 * X_train.shape[0])
 
-    train_dset = TensorDataset(X_train[:nb_train], y_train[:nb_train],
-                               mask_train[:nb_train])
-    val_dset = TensorDataset(X_train[nb_train:], y_train[nb_train:],
-                             mask_train[nb_train:])
+    train_dset = TensorDataset(X_train[:nb_train].permute(0, 2, 1),
+                               y_train[:nb_train])
+    val_dset = TensorDataset(X_train[nb_train:].permute(0, 2, 1),
+                             y_train[nb_train:])
 
     loader_args = {}
     if args.use_cuda:
@@ -204,10 +198,10 @@ def main():
         val_dset, batch_size=args.batch_size, shuffle=False, **loader_args)
 
     model = SeqAttention(
-        45, 1195, args.n_filters, args.len_motifs, args.subsamplings,
+        768, 2, args.n_filters, args.len_motifs, args.subsamplings,
         kernel_args=args.kernel_params, alpha=args.weight_decay,
         eps=args.eps, heads=args.heads, out_size=args.out_size,
-        max_iter=args.max_iter, fit_bias=False, mask_zeros=False)
+        max_iter=args.max_iter, fit_bias=False)
     print(model)
     print(len(train_dset))
 
@@ -231,11 +225,11 @@ def main():
 
     Xval = []
     yval = []
-    for _, val_l in val_loader:
-        X, y = model.predict(val_l, only_repr=True, use_cuda=args.use_cuda)
-        preprocess(X)
-        Xval.append(X)
-        yval.append(y)
+
+    X, y = model.predict(val_loader, only_repr=True, use_cuda=args.use_cuda)
+    preprocess(X)
+    Xval.append(X)
+    yval.append(y)
 
     search_grid = 2. ** np.arange(5, 20)
     search_grid = 1. / search_grid
@@ -275,7 +269,7 @@ def main():
 
     print("Finished, elapsed time: {:.2f}s".format(toc - tic))
 
-    test_dset = TensorDataset(X_val, y_val, mask_val)
+    test_dset = TensorDataset(X_val.permute(0, 2, 1), y_val)
     test_loader = DataLoader(
         test_dset, batch_size=args.batch_size, shuffle=False)
     Xte, y_true = model.predict(test_loader, only_repr=True,
@@ -298,10 +292,7 @@ def main():
             'val_score': best_score,
             'args': args
             }
-        save_dataset_folder = os.path.join(RESULTS_PATH, args.dataset)
-        os.makedirs(save_dataset_folder, exist_ok=True)
-        # np.save(os.path.join(save_dataset_folder, title), data)
-        np.save(os.path.join(save_dataset_folder, args.outdir), data)
+        np.save(os.path.join(args.outdir, 'results.npy'), data)
         # torch.save(
         #     {'args': args,
         #      'state_dict': model.state_dict()},

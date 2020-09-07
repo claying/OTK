@@ -9,7 +9,8 @@ from ckn.models import CKNSequential
 class SeqAttention(nn.Module):
     def __init__(self, in_channels, nclass, hidden_sizes, filter_sizes,
                  subsamplings, kernel_args=None, eps=0.1, heads=1,
-                 out_size=1, max_iter=50, alpha=0., fit_bias=True, mask_zeros=True):
+                 out_size=1, max_iter=50, alpha=0., fit_bias=True,
+                 mask_zeros=True):
         super().__init__()
         self.embed_layer = BioEmbedding(
             in_channels, False, mask_zeros=True, no_embed=True)
@@ -27,7 +28,8 @@ class SeqAttention(nn.Module):
 
     def feature_parameters(self):
         import itertools
-        return itertools.chain(self.ckn_model.parameters(), self.attention.parameters())
+        return itertools.chain(self.ckn_model.parameters(),
+                               self.attention.parameters())
 
     def normalize_(self):
         self.ckn_model.normalize_()
