@@ -231,7 +231,7 @@ def main():
     Xval.append(X)
     yval.append(y)
 
-    search_grid = 2. ** np.arange(5, 20)
+    search_grid = 2. ** np.arange(1, 20)
     search_grid = 1. / search_grid
     best_score = -np.inf
     clf = model.classifier
