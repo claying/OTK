@@ -98,9 +98,9 @@ def load_args():
                 os.makedirs(outdir)
             except:
                 pass
-        outdir = outdir + '/{}_{}_{}_{}_{}'.format(
+        outdir = outdir + '/{}_{}_{}_{}_{}_{}'.format(
             args.max_iter, args.eps, args.out_size, args.heads,
-            args.weight_decay)
+            args.weight_decay, args.wb)
         if not os.path.exists(outdir):
             try:
                 os.makedirs(outdir)
