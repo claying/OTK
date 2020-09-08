@@ -59,7 +59,7 @@ def load_args():
         '--wb', action='store_true',
         help='use Wasserstein barycenter instead of kmeans')
     parser.add_argument(
-        '--baseline', type=str, default=None)
+        '--baseline', type=str, default='ours', choices=['ours'])
     parser.add_argument(
         "--outdir", default="results/", type=str, help="output path")
     args = parser.parse_args()
@@ -79,6 +79,12 @@ def load_args():
             except:
                 pass
         outdir = outdir + "/unsup"
+        if not os.path.exists(outdir):
+            try:
+                os.makedirs(outdir)
+            except:
+                pass
+        outdir = outdir + f"/{args.baseline}"
         if not os.path.exists(outdir):
             try:
                 os.makedirs(outdir)
@@ -231,7 +237,7 @@ def main():
     Xval.append(X)
     yval.append(y)
 
-    search_grid = 2. ** np.arange(1, 20)
+    search_grid = 2. ** np.arange(1, 15)
     search_grid = 1. / search_grid
     best_score = -np.inf
     clf = model.classifier
@@ -292,7 +298,8 @@ def main():
             'val_score': best_score,
             'args': args
             }
-        np.save(os.path.join(args.outdir, 'results.npy'), data)
+        np.save(os.path.join(args.outdir, f"seed_{args.seed}_results.npy"),
+                data)
         # torch.save(
         #     {'args': args,
         #      'state_dict': model.state_dict()},
