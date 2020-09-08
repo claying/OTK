@@ -165,13 +165,6 @@ def preprocess(X):
 
 def main():
     args = load_args()
-    # title = (f"dataset_{args.dataset}_unsup_gauss_emb_{args.n_filters}_"
-    #         f"kernel_args_{args.kernel_params}_"
-    #         f"eps_{args.eps}_heads_{args.heads}_patches_{args.out_size}"
-    #         f"wd_{args.weight_decay}_"
-    #         f"seed_{args.seed}_baseline_{args.baseline}"
-    #         )
-    # print(title)
     print(args)
     torch.manual_seed(args.seed)
     if args.use_cuda:
