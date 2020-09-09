@@ -93,6 +93,14 @@ def load_args():
                 os.makedirs(outdir)
             except:
                 pass
+        if args.baseline == 'ours':
+            if args.alternating:
+                outdir = outdir + "/alter"
+                if not os.path.exists(outdir):
+                    try:
+                        os.makedirs(outdir)
+                    except:
+                        pass
         outdir = outdir+'/ckn_{}_{}_{}_{}'.format(
             args.n_filters, args.len_motifs, args.subsamplings,
             args.kernel_params)
