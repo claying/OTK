@@ -36,7 +36,7 @@ def load_args():
         "--subsamplings", default=[1], nargs='+', type=int,
         help="subsampling for each layer")
     parser.add_argument(
-        "--kernel-params", default=[0.6], nargs='+', type=float,
+        "--kernel-params", default=[0.4], nargs='+', type=float,
         help="sigma for Gaussian kernel at each layer")
     parser.add_argument(
         "--sampling-patches", default=300000, type=int,
@@ -45,7 +45,7 @@ def load_args():
         "--weight-decay", type=float, default=0.0001,
         help="weight decay for classifier")
     parser.add_argument(
-        '--eps', type=float, default=0.5, help='eps for Sinkhorn')
+        '--eps', type=float, default=1.0, help='eps for Sinkhorn')
     parser.add_argument(
         '--heads', type=int, default=1,
         help='number of heads for attention layer')
