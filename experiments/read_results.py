@@ -20,4 +20,4 @@ for path, subdirs, filenames in os.walk(os.path.join('results', args.p)):
             print('No valid results here: ', filenames)
         else:
             print('Score: ', np.mean(scores), 'Std: ', np.std(scores),
-                  x['args'])
+                  'Nb runs: ', len(scores), x['args'])
