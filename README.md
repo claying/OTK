@@ -139,6 +139,29 @@ To reproduce the results (auROC=0.936, auPRC=0.360) in Table 3, run the followin
     python eval_deepsea.py --eps 1.0 --heads 1 --out-size 64 --hidden-layer --position-encoding gaussian --weight-decay 1e-06 --position-sigma 0.1 --outdir ../logs_deepsea --max-iter 30 --filter-size 16 --hidden-size 1536
     ```
 
+#### Reproducing results for SST-2
+
+To reproduce the results in Table 4, run the following commands.
+
+* **Data preparation**
+    ```bash
+    cd data
+    bash get_sst2.sh
+    ```
+
+* **Unsupervised learning with OTK for SST-2**
+    ```bash
+    cd experiments
+    python nlp_unsup.py --n-filters 2048  --out-size 3
+    ```
+
+* **Supervised learning with OTK for SST-2**
+    ```bash
+    cd experiments
+    # OTK with one reference
+    python nlp_sup.py --n-filters 64 --out-size 3 --eps 3.0 --alternating
+    ```
+
 
 [1]: https://arxiv.org/abs/2006.12065
 [2]: https://docs.conda.io/en/latest/miniconda.html

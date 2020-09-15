@@ -9,7 +9,8 @@ from ckn.models import CKNSequential
 class SeqAttention(nn.Module):
     def __init__(self, in_channels, nclass, hidden_sizes, filter_sizes,
                  subsamplings, kernel_args=None, eps=0.1, heads=1,
-                 out_size=1, max_iter=50, alpha=0., fit_bias=True, mask_zeros=True):
+                 out_size=1, max_iter=50, alpha=0., fit_bias=True,
+                 mask_zeros=True):
         super().__init__()
         self.embed_layer = BioEmbedding(
             in_channels, False, mask_zeros=True, no_embed=True)
@@ -27,7 +28,8 @@ class SeqAttention(nn.Module):
 
     def feature_parameters(self):
         import itertools
-        return itertools.chain(self.ckn_model.parameters(), self.attention.parameters())
+        return itertools.chain(self.ckn_model.parameters(),
+                               self.attention.parameters())
 
     def normalize_(self):
         self.ckn_model.normalize_()
@@ -72,19 +74,23 @@ class SeqAttention(nn.Module):
                 else:
                     batch_out = self(data).data.cpu()
             if i == 0:
-                output = batch_out.new_empty([n_samples] + list(batch_out.shape[1:]))
+                output = batch_out.new_empty([n_samples] +
+                                             list(batch_out.shape[1:]))
             output[batch_start:batch_start + batch_size] = batch_out
             target_output[batch_start:batch_start + batch_size] = target
             batch_start += batch_size
         return output, target_output
 
-    def train_classifier(self, data_loader, criterion=None, epochs=100, optimizer=None, use_cuda=False):
+    def train_classifier(self, data_loader, criterion=None, epochs=100,
+                         optimizer=None, use_cuda=False):
         encoded_train, encoded_target = self.predict(
             data_loader, only_repr=True, use_cuda=use_cuda)
         self.classifier.fit(encoded_train, encoded_target, criterion,
-                            reg=self.alpha, epochs=epochs, optimizer=optimizer, use_cuda=use_cuda)
+                            reg=self.alpha, epochs=epochs, optimizer=optimizer,
+                            use_cuda=use_cuda)
 
-    def unsup_train(self, data_loader, n_sampling_patches=300000, n_samples=5000, wb=False, use_cuda=False):
+    def unsup_train(self, data_loader, n_sampling_patches=300000,
+                    n_samples=5000, wb=False, use_cuda=False):
         self.eval()
         if use_cuda:
             self.cuda()
@@ -93,7 +99,9 @@ class SeqAttention(nn.Module):
             print("Training ckn layer {}".format(i))
             n_patches = 0
             try:
-                n_patches_per_batch = (n_sampling_patches + len(data_loader) - 1) // len(data_loader)
+                n_patches_per_batch = (
+                    n_sampling_patches + len(data_loader) - 1
+                    ) // len(data_loader)
             except:
                 n_patches_per_batch = 1000
             patches = torch.Tensor(n_sampling_patches, ckn_layer.patch_dim)
