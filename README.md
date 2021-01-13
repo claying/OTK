@@ -1,10 +1,12 @@
-# Optimal Transport Kernel
+# Optimal Transport Kernel Embedding
 
-The repository implements the Optimal Transport Kernel (OTK) described in the following paper
+The repository implements the Optimal Transport Kernel Embedding (OTKE) described in the following paper
 
 >Grégoire Mialon*, Dexiong Chen*, Alexandre d'Aspremont, Julien Mairal.
-[An Optimal Transport Kernel for Feature Aggregation and its Relationship to Attention][1]. preprint arXiv, 2020.
+[A Trainable Optimal Transport Embedding for Feature Aggregation and its Relationship to Attention][1]. ICLR 2021.
 <br/>*Equal contribution
+
+TLDR; the paper demonstrates the advantage of our OTK Embedding over usual aggregation methods (e.g, mean pooling, max pooling or attention) when faced with data composed of large sets of features, such as biological sequences, natural language sentences or even images. Our embedding can be learned either with or without labels, which is especially useful when few annotated data are available, and used alone as a kernel method or as a layer in larger models.
 
 ## A short description about the module
 

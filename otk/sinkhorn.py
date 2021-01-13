@@ -154,7 +154,7 @@ def wasserstein_kmeans(x, n_clusters, out_size, eps=1.0, block_size=None, max_it
         del x_batch
         sim = wass_sim.mean()
         if verbose and (n_iter + 1) % 10 == 0:
-            print("Wassestein spherical kmeans iter {}, objective value {}".format(
+            print("Wasserstein spherical kmeans iter {}, objective value {}".format(
                   n_iter + 1, sim))
 
         for j in range(n_clusters):
